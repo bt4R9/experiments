@@ -1,0 +1,261 @@
+<!doctype html>
+<html>
+<head>
+	<title>112233</title>
+</head>
+<body>
+	<canvas id="canvas" style="border:1px solid red;"></canvas>
+	<script>
+		(function(window, undefined) {
+			window.GAME = {};
+
+			GAME.CANVAS = document.getElementById('canvas');
+			GAME.ctx = GAME.CANVAS.getContext('2d');
+
+			GAME.MIN_X = 0;
+			GAME.MIN_Y = 0;
+			GAME.MAX_X = 0;
+			GAME.MAX_Y = 0;
+
+			GAME.BLOCK_SIZE = 16;
+
+			GAME.EMPTY = 0;
+			GAME.SNAKE = 1;
+			GAME.BONUS = 2;
+			GAME.BLOCK = [
+				'block0.png',
+				'block1.png',
+				'block2.png'
+			];
+
+			GAME.speed = 200;
+
+			GAME.x = 0;
+			GAME.y = 0;
+			GAME.arrow = 'right';
+
+			GAME.field = [];
+			// [x, y]
+			GAME.snake = [[0, 0],[1, 0]];
+
+			GAME.loadRescources = function(rescources, callback) {
+				var self = this;
+				var total = 0;
+				var loaded = 0;
+				for (var i = 0; i < rescources.length; i++) {
+					total++
+					var link = rescources[i];
+					(function(link, position) {
+						self.BLOCK[position] = new Image();
+						self.BLOCK[position].src = link;
+						self.BLOCK[position].onload = function() {
+							loaded++;
+							if (total > 0 && total == loaded) {
+								callback();
+							}
+						}
+					})(link, i);
+				}
+			};
+
+			GAME.makeField = function() {
+				var self = this;
+
+				var x = self.x;
+				var y = self.y;
+
+				for (var i = 0; i < y; i++) {
+					self.field[i] = [];
+					for (var j = 0; j < x; j++) {
+						self.field[i][j] = 0;
+					}
+				}
+
+				self.CANVAS.width = self.BLOCK_SIZE * x;
+				self.CANVAS.height = self.BLOCK_SIZE * y;
+
+				self.MIN_X = 0;
+				self.MIN_Y = 0;
+				self.MAX_X = x - 1;
+				self.MAX_Y = y - 1;
+			};
+
+			GAME.snakeToField = function() {
+				var self = this;
+				var snake = self.snake;
+				var field = self.field;
+
+				for (var i = 0, l = snake.length; i < l; i++) {
+					var CUR_X = snake[i][0];
+					var CUR_Y = snake[i][1];
+					field[CUR_Y][CUR_X] = 1;
+				}
+			};
+
+			GAME.draw = function() {
+				var self = this;
+				var x = self.x;
+				var y = self.y;
+				var block = self.BLOCK;
+				var field = self.field;
+				var ctx = self.ctx;
+
+				var _x = 0;
+				var _y = 0;
+
+				for (var i = 0; i < y; i++) {
+					_x = 0;
+					for (var j = 0; j < x; j++) {
+						ctx.drawImage(block[field[i][j]], _x, _y);
+						_x += self.BLOCK_SIZE;
+					}
+					_y += self.BLOCK_SIZE;
+				}
+
+			};
+
+			GAME.makeBonus = function() {
+				var self = this;
+				var x = Math.floor(Math.random() * self.x);
+				var y = Math.floor(Math.random() * self.y);
+
+				var snake = self.snake;
+
+				var success = true;
+				for (var i = 0; i < snake.length; i++) {
+					var currentX = snake[i][0];
+					var currentY = snake[i][1];
+					if (currentX == x && currentY == y) {
+						success = false;
+					}
+				}
+
+				if (success) {
+					self.field[y][x] = GAME.BONUS;
+				} else {
+					console.log('fail');
+					GAME.makeBonus();
+				}
+			};
+
+			GAME.step = function() {
+				var self = this;
+
+				var arrow = self.arrow;
+				var field = self.field;
+
+				var snake = self.snake;
+				var last = snake[snake.length - 1];
+				var first = snake[0];
+				var head = [];
+
+				var lastX = last[0];
+				var lastY = last[1];
+
+				var MAX_X = self.MAX_X;
+				var MAX_Y = self.MAX_Y;
+				var MIN_X = self.MIN_X;
+				var MIN_Y = self.MIN_Y;
+
+				switch(arrow) {
+					case 'up':
+						if (lastY - 1 >= 0) {
+							head = [lastX ,lastY-1];
+						}
+						break;
+					case 'down':
+						if (lastY + 1 <= MAX_Y) {
+							head = [lastX, lastY+1];
+						}
+						break;
+					case 'left':
+						if (lastX - 1 >= 0) {
+							head = [lastX-1 ,lastY];
+						}
+						break;
+					case 'right':
+						if (lastX + 1 <= MAX_X) {
+							head = [lastX+1, lastY];
+						}
+						break;
+					default:
+						break;
+				}
+
+
+				var lose = false;
+
+				if (head.length) {
+					var headX = head[0];
+					var headY = head[1];
+					for (var i = 0; i < snake.length; i++) {
+						var currentX = snake[i][0];
+						var currentY = snake[i][1];
+
+						if (headX == currentX && headY == currentY) {
+							lose = true;
+						}
+					}
+				} else {
+					lose = true;
+				}
+
+				if (!lose) {
+					field[first[1]][first[0]] = self.EMPTY;
+					var bonus = field[head[1]][head[0]] == self.BONUS;
+					if (!bonus) {
+						snake.shift();
+					}
+					snake.push(head);
+
+					if (bonus) {
+						if (GAME.snake.length%5 == 0) {
+							GAME.speed = GAME.speed - 10;
+						}
+						self.makeBonus();
+					}
+
+					self.snakeToField();
+					self.draw();
+				} else {
+					console.log('LOSE!');
+				}
+
+				setTimeout(function() {
+					console.log(GAME.speed);
+					GAME.step();
+				}, GAME.speed);
+			};
+
+
+			document.onkeydown = function(e) {
+				switch (e.keyCode) {
+					case 37:
+						GAME.arrow = 'left';
+						break;
+					case 39:
+						GAME.arrow = 'right';
+						break;
+					case 38:
+						GAME.arrow = 'up';
+						break;
+					case 40:
+						GAME.arrow = 'down';
+						break;
+				};
+			};
+
+			GAME.loadRescources(GAME.BLOCK, function() {
+				GAME.x = 30;
+				GAME.y = 20;
+				GAME.makeField();
+				GAME.snakeToField();
+				GAME.makeBonus();
+				GAME.draw();
+				GAME.step();
+			});
+
+		})(window);
+	</script>
+</body>
+</html>
