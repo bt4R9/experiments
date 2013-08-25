@@ -1,0 +1,48 @@
+	<!doctype html>
+<html>
+	<head>
+		<style>
+			html, body {
+				width: 100%;
+				height: 100%;
+				overflow: hidden;
+				margin: 0;
+				padding: 0;
+			}
+		</style>
+	</head>
+	<body>
+		<canvas style="background:#000;width:1000px;height:700px" width="500" height="400" id="c"></canvas>
+		<script src="simple2D.js"></script>
+		<script>
+
+			var g = new Simple2D.Geometry([ [200, 200], [250, 200], [250, 250], [200, 250] ]);
+			var v = new Simple2D.Vector(0, 0);
+			var sh = new Simple2D.Shape(g, v);
+			var w = new Simple2D.World('c');
+			w.add(sh);
+
+			var g2 = new Simple2D.Geometry([ [215, 215], [235, 215], [235, 235], [215, 235] ]);
+			var v2 = new Simple2D.Vector(0, 0);
+			var sh2 = new Simple2D.Shape(g2, v2, { color: '#00FF00' });
+			w.add(sh2);
+
+			var g3 = new Simple2D.Geometry([ [175, 175], [275, 175], [275, 275], [175, 275] ]);
+			var v3 = new Simple2D.Vector(0, 0);
+			var sh3 = new Simple2D.Shape(g3, v3, { color: '#0000FF' });
+			w.add(sh3);
+
+			function simulate() {
+				sh.rotation += 0.0001;
+				sh2.rotation -= 0.0001;
+				sh3.rotation -= 0.0001;
+				w.update();
+				w.draw();
+				requestAnimationFrame(simulate);
+			};
+
+			simulate();
+
+		</script>
+	</body>
+</html>
