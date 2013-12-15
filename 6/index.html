@@ -1,0 +1,57 @@
+	<!doctype html>
+<html>
+	<head>
+		<style>
+			html, body {
+				width: 100%;
+				height: 100%;
+				overflow: hidden;
+				margin: 0;
+				padding: 0;
+			}
+		</style>
+	</head>
+	<body onload="init()">
+		<canvas style="background:#000;" id="c"></canvas>
+		<script src="simple2D.js"></script>
+		<script>
+        function init() {
+            var c = document.getElementById('c');
+            c.setAttribute('width', screen.width);
+            c.setAttribute('height', screen.height);
+
+            var world = new S2D.World('c');
+
+            var geometry = new S2D.Geometry([ [50, 50], [100, 50], [125, 75], [100, 100], [50, 100], [25, 75] ]);
+            var vector = new S2D.Vector(1, 1);
+            var shape = new S2D.Shape(geometry, vector, 0.15, { color: '#FF0000', lineWidth: 0.02 });
+
+            var geometry2 = new S2D.Geometry([ [200,200], [230, 270], [170, 270] ]);
+            var vector2 = new S2D.Vector(1, 1);
+            var shape2 = new S2D.Shape(geometry2, vector2, 0.35, { color: '#00FF00', lineWidth: 0.03 });
+
+            var geometry3 = new S2D.Geometry([ [300, 50], [350, 50], [350, 100] ]);
+            var vector3 = new S2D.Vector(1, 1);
+            var shape3 = new S2D.Shape(geometry3, vector3, 0.35, { color: '#0000FF', lineWidth: 0.025 });
+
+            geometry.moveBy(new S2D.Vector(1,1), 100);
+            geometry2.moveBy(new S2D.Vector(1, -1), 80);
+
+            world.add(shape);
+            world.add(shape2);
+            world.add(shape3);
+
+            function simulate() {
+            	shape.rotation += 0.01;
+            	shape2.rotation -= 0.015;
+            	shape3.rotation += 0.02;
+            	world.update();
+            	world.draw();
+            	requestAnimationFrame(simulate);
+            };
+
+            simulate();
+        };
+		</script>
+	</body>
+</html>
