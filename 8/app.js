@@ -6,7 +6,7 @@ camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight,
 camera.position.z = 150;
 
 var sphereGeometry = new THREE.SphereBufferGeometry(70, 40, 40);
-var lava = THREE.ImageUtils.loadTexture('/lava2.png');
+var lava = THREE.ImageUtils.loadTexture('lava2.png');
 lava.wrapS = THREE.ClampToEdgeWrapping;
 lava.wrapT = THREE.ClampToEdgeWrapping;
 sphereGeometry.computeVertexNormals();
