@@ -1,0 +1,46 @@
+<!doctype html>
+<html>
+    <head>
+        <style>
+            html,body {margin:0;padding:0;overflow:hidden}
+        </style>
+        <script src="threejs/build/three.js"></script>
+        <script type="x-shader/x-vertex" id="shaderVertex">
+            void main(void) {
+                gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+            }
+        </script>
+        <script type="x-shader/x-fragment" id="shaderFragment">
+            uniform float light;
+            uniform vec2 mouse;
+            uniform vec2 res;
+            uniform sampler2D texture;
+            uniform sampler2D textureNormal;
+
+            void main(void) {
+                vec2 uv = gl_FragCoord.xy / res.xy;
+                vec4 color = texture2D(texture, uv);
+                vec4 norm = texture2D(textureNormal, uv);
+                vec2 m = mouse;
+                m.y = res.y - mouse.y;
+
+                vec2 lightPosition = mouse.xy / res.xy;
+                lightPosition.y = 1.0 - lightPosition.y;
+                vec3 LightVector = vec3(lightPosition.x - uv.x, lightPosition.y - uv.y, light);
+                LightVector = normalize(LightVector);
+                vec3 NormalVector = normalize(norm.xyz);
+                float dist = distance(gl_FragCoord.xy, m.xy);
+
+                if (light * res.x > dist) {
+                    gl_FragColor = color * (1.09 - dist / (light * res.x)) * 9.0 * max(dot(NormalVector, LightVector ), 0.0);
+                    gl_FragColor.r = 0.0;
+                } else {
+                    gl_FragColor = color / 5.0;
+                }
+            }
+        </script>
+    </head>
+    <body>
+        <script src="app.js"></script>
+    </body>
+</html>
