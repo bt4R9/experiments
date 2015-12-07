@@ -1,0 +1,85 @@
+<!doctype html>
+<html>
+<head>
+    <style>
+        html,body {margin:0;padding:0;overflow:hidden}
+    </style>
+    <script src="three.js"></script>
+    <script type="x-shader/x-vertex" id="shaderVertex">
+            void main(void) {
+                gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+            }
+    </script>
+    <script type="x-shader/x-fragment" id="shaderFragment">
+            uniform sampler2D texture;
+            uniform vec2 resolution;
+            uniform float time;
+
+            void main(void) {
+                vec2 center = vec2(0.803, 0.277);
+
+                vec2 cPos = -1.0 + 1.25 * gl_FragCoord.xy / resolution.xy;
+                cPos.y += 0.66;
+                float cLength = length(cPos);
+
+                vec2 uv = gl_FragCoord.xy / resolution.xy + (cPos / cLength) * cos(cLength * 50.0 - time * 2.0) * 0.003;
+                vec3 col = texture2D(texture, uv).xyz;
+
+                float dist = distance(center.xy, uv.xy);
+
+                if (dist < 0.006) {
+                    col.r *= (1.0 - dist) * max(sin(time * 0.5), 0.1) * 1.2;
+                    col.b = 0.0;
+                } else {
+                    col = col * (1.1 - 1.5 * dist);
+                    col.g *= max((1.0 - dist) * max(sin(time * 0.3), 0.0) * 1.76, 0.5);
+                }
+
+                gl_FragColor = vec4(col, 1.0);
+            }
+        </script>
+</head>
+<body>
+<script>
+    var scene = new THREE.Scene();
+    var camera = new THREE.Camera();
+    var renderer = new THREE.WebGLRenderer({ antialias: true });
+
+    camera.position.z = 1;
+
+    renderer.setSize( window.innerWidth, window.innerHeight );
+    document.body.appendChild(renderer.domElement);
+
+    var texture = THREE.ImageUtils.loadTexture('texture.jpg');
+    texture.wrapS = THREE.RepeatWrapping;
+    texture.wrapT = THREE.RepeatWrapping;
+
+    var planeGeometry = new THREE.PlaneBufferGeometry(2, 2);
+    var planeMaterial = new THREE.ShaderMaterial({
+        uniforms: {
+            time: { type: 'f', value: 0 },
+            texture: { type: "t", value: texture },
+            resolution: { type: 'v2', value: new THREE.Vector2(window.innerWidth, window.innerHeight) }
+        },
+        vertexShader: document.getElementById('shaderVertex').innerText,
+        fragmentShader: document.getElementById('shaderFragment').innerText
+    });
+    var plane = new THREE.Mesh(planeGeometry, planeMaterial);
+    scene.add(plane);
+
+    var clock = new THREE.Clock();
+
+    function renderLoop() {
+        requestAnimationFrame(renderLoop);
+
+        clock.getDelta();
+
+        planeMaterial.uniforms.time.value = clock.elapsedTime;
+
+        renderer.render(scene, camera);
+    }
+
+    renderLoop();
+</script>
+</body>
+</html>
