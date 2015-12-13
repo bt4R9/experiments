@@ -1,0 +1,145 @@
+<!doctype html>
+<html>
+<head>
+    <style>
+        html,body {margin:0;padding:0;overflow:hidden}
+    </style>
+    <script src="dat.gui.js"></script>
+    <script src="three.js"></script>
+    <script type="x-shader/x-vertex" id="shaderVertex">
+            void main(void) {
+                gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+            }
+    </script>
+    <script type="x-shader/x-fragment" id="shaderFragment">
+            uniform sampler2D texture;
+            uniform sampler2D nrm;
+            uniform sampler2D nrmInverse;
+            uniform vec2 resolution;
+            uniform float lightSize;
+            uniform float lightPower;
+            uniform float time;
+            uniform vec2 mouse;
+            uniform float nrmInverseBool;
+            uniform float lightPositionX;
+            uniform float lightPositionY;
+
+            void main(void) {
+                vec2 uv = gl_FragCoord.xy / resolution.xy;
+                vec3 color = texture2D(texture, uv).xyz;
+                vec3 colorNRM;
+
+                if (nrmInverseBool == 0.0) {
+                    colorNRM = texture2D(nrmInverse, uv).xyz;
+                } else {
+                    colorNRM = texture2D(nrm, uv).xyz;
+                }
+
+                vec3 LightVector = vec3(mouse.x - uv.x, mouse.y - uv.y, lightSize);
+
+                colorNRM.x -= lightPositionX;
+                colorNRM.y -= lightPositionY;
+
+                vec3 nrmNormalized = normalize(colorNRM);
+                vec3 lightNormalized = normalize(LightVector);
+
+                float diffuse = lightPower * (dot(nrmNormalized, lightNormalized));
+
+                gl_FragColor = vec4(color * diffuse, 1.0);
+            }
+        </script>
+</head>
+<body>
+<script>
+    var settings = new function() {
+        this['light size'] = 0.01;
+        this['light power'] = 9.5;
+        this['inverse nrm map'] = false;
+        this['light position X'] = 0.5;
+        this['light position Y'] = 0.5;
+    };
+    var gui = new dat.GUI();
+
+    gui.add(settings, 'light size', 0.01, 1.0).onChange(function(value) {
+        planeMaterial.uniforms.lightSize.value = value;
+    });
+
+    gui.add(settings, 'light power', 0.01, 30.1).step(0.15).onChange(function(value) {
+        planeMaterial.uniforms.lightPower.value = value;
+    });
+
+    gui.add(settings, 'inverse nrm map', false).onChange(function(value) {
+        planeMaterial.uniforms.nrmInverseBool.value = value ? 1.0 : 0.0;
+    });
+
+    gui.add(settings, 'light position X', -2, 2).onChange(function(value) {
+        planeMaterial.uniforms.lightPositionX.value = value;
+    });
+
+    gui.add(settings, 'light position Y', -2, 2).onChange(function(value) {
+        planeMaterial.uniforms.lightPositionY.value = value;
+    });
+
+    var scene = new THREE.Scene();
+    var camera = new THREE.Camera();
+    var renderer = new THREE.WebGLRenderer({ antialias: true });
+
+    camera.position.z = 1;
+
+    renderer.setSize( window.innerWidth, window.innerHeight );
+    document.body.appendChild(renderer.domElement);
+
+    var texture = THREE.ImageUtils.loadTexture('texture.jpg');
+    texture.wrapS = THREE.RepeatWrapping;
+    texture.wrapT = THREE.RepeatWrapping;
+
+    var nrm = THREE.ImageUtils.loadTexture('texture_NRM.png');
+    nrm.wrapS = THREE.RepeatWrapping;
+    nrm.wrapT = THREE.RepeatWrapping;
+
+    var nrmInverse = THREE.ImageUtils.loadTexture('texture_NRM_inverse.png');
+    nrmInverse.wrapS = THREE.RepeatWrapping;
+    nrmInverse.wrapT = THREE.RepeatWrapping;
+
+    var planeGeometry = new THREE.PlaneBufferGeometry(2, 2);
+    var planeMaterial = new THREE.ShaderMaterial({
+        uniforms: {
+            mouse: { type: 'v2', value: new THREE.Vector2() },
+            time: { type: 'f', value: 0 },
+            texture: { type: "t", value: texture },
+            nrm: { type: "t", value: nrm },
+            nrmInverse: { type: 't', value: nrmInverse },
+            nrmInverseBool: { type: 'f', value: settings['inverse nrm map'] },
+            lightSize: { type: 'f', value: settings['light size'] },
+            lightPower: { type: 'f', value: settings['light power'] },
+            lightPositionX: { type: 'f', value: settings['light position X'] },
+            lightPositionY: { type: 'f', value: settings['light position Y'] },
+            resolution: { type: 'v2', value: new THREE.Vector2(window.innerWidth, window.innerHeight) }
+        },
+        vertexShader: document.getElementById('shaderVertex').innerText,
+        fragmentShader: document.getElementById('shaderFragment').innerText
+    });
+    var plane = new THREE.Mesh(planeGeometry, planeMaterial);
+    scene.add(plane);
+
+    var clock = new THREE.Clock();
+
+    document.onmousemove = function(e) {
+        planeMaterial.uniforms.mouse.value.x = e.pageX / window.innerWidth;
+        planeMaterial.uniforms.mouse.value.y = 1.0 - (e.pageY / window.innerHeight);
+    };
+
+    function renderLoop() {
+        requestAnimationFrame(renderLoop);
+
+        clock.getDelta();
+
+        planeMaterial.uniforms.time.value = clock.elapsedTime;
+
+        renderer.render(scene, camera);
+    }
+
+    renderLoop();
+</script>
+</body>
+</html>
