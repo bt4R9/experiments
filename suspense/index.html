@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Suspense</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="shower/themes/ribbon/styles/styles.css">
+    <style>
+        .shower {
+            --slide-ratio: calc(16 / 9);
+        }
+    </style>
+</head>
+
+<body class="shower list">
+
+    <header class="caption">
+        <h1>Suspended world</h1>
+    </header>
+
+    <section class="slide" id="cover">
+        <h2>React Suspense</h2>
+        <figure style="margin-top: 120px">
+            <blockquote>
+                <p>React.Suspense lets you specify the loading indicator in case some components in the tree below it
+                    are not yet ready to render.</p>
+            </blockquote>
+            <figcaption><a target="_blank" href="https://reactjs.org/docs/react-api.html#reactsuspense">React Docs</a>
+            </figcaption>
+        </figure>
+    </section>
+
+    <section class="slide">
+        <h2>Suspense for lazy loading</h2>
+        <pre>
+            <code>const ComponentLazy = React.lazy(() => {</code>
+            <code>  return <mark>import('./Component');</mark></code>
+            <code>});</code>
+            <code> </code>
+            <code>&lt;React.Suspense fallback={<mark>&lt;div&gt;loading...&lt;/div&gt;</mark>}&gt;</code>
+            <code>  <mark>&lt;ComponentLazy /&gt;</mark></code>
+            <code>&lt;/React.Suspense&gt;</code>
+        </pre>
+    </section>
+
+    <section class="slide">
+        <h2>Benefits</h2>
+        <ol>
+            <li>Simple loading state management</li>
+            <li>Code splitting</li>
+            <li>Performance</li>
+        </ol>
+    </section>
+
+    <section class="slide">
+        <h2>Reusable pattern for modals</h2>
+
+        <pre>
+            <code>const ModalAppLazy = React.lazy(() => import('./App'));</code>
+            <code> </code>
+            <code>&lt;Modal isOpen={isOpen}&gt;</code>
+            <code>  &lt;React.Suspense fallback={&lt;LoadingState /&gt;}&gt;</code>
+            <code>    &lt;ModalAppLazy {...props} /&gt;</code>
+            <code>  &lt;/React.Suspense&gt;</code>
+            <code>&lt;/Modal&gt;</code>
+        </pre>
+    </section>
+
+    <section class="slide">
+        <h2>How does it work?</h2>
+
+        <ol>
+            <li>wix-style-react is a peer dependency
+                <p>A host application version of the WSR is used.</p>
+            </li>
+            <li>Conditional children rendering
+                <p>Children will not be rendered untill isOpen flag is changed.</p>
+            </li>
+        </ol>
+
+        <a target="_blank"
+            href="https://github.com/wix-private/premium-management/blob/master/packages/assign-subscription/src/components/AssignSubscription/AssignSubscriptionModal/AssignSubscriptionModal.tsx">Link</a>
+    </section>
+
+    <section class="slide">
+        <h2>Suspense for Data fetching</h2>
+        <figure style="margin-top: 120px">
+            <blockquote>
+                <p>Suspense for Data Fetching is a new feature that lets you also use <Suspense> to declaratively “wait”
+                        for anything else, including data.</p>
+            </blockquote>
+            <figcaption><a href="https://reactjs.org/docs/concurrent-mode-suspense.html">React Docs</a></figcaption>
+        </figure>
+    </section>
+
+    <section class="slide">
+        <h2>Resource</h2>
+        <pre>
+            <code>const Comp = ({ resource }) => &lt;div&gt;{<mark>resource.read()</mark>}&lt;/div&gt;</code>
+            <code> </code>
+            <code>&lt;ErrorBoundary fallback={&lt;ErrorState /&gt;}&gt;</code>
+            <code>  &lt;React.Suspense fallback={&lt;LoadingState /&gt;}&gt;</code>
+            <code>    &lt;Comp resource={<mark>createResource(fetch(props.url))</mark>} /&gt;</code>
+            <code>  &lt;/React.Suspense&gt;</code>
+            <code>&lt;/ErrorBoundary&gt;</code>
+        </pre>
+    </section>
+
+    <section class="slide">
+        <h2>Resource internally</h2>
+        <pre>
+            <code>read() {</code>
+            <code>  if (status === 'pending') <mark>throw promise;</mark></code>
+            <code>  if (status === 'failure') throw result;</code>
+            <code>  if (status === 'success') return result;</code>
+            <code>}</code>
+        </pre>
+    </section>
+
+    <section class="slide">
+        <h2>Benefits</h2>
+
+        <ul>
+            <li>It uses the same Suspense mechanism
+                <p>Suspense can be used for both Lazy components and data fetching.</p>
+            </li>
+            <li>Easy-to-use and easy-to-maintain
+                <p>Works on a core level of React. No need for custom state management.</p>
+            </li>
+        </ul>
+    </section>
+
+    <section class="slide" style="line-height: 1">
+        <h2>A little problem</h2>
+
+        <img class="next twitter-problem__1 animation" width="420vw" src="pictures/problem_1.png" />
+        <img class="next twitter-problem__2 animation" width="500vw" src="pictures/problem_2.png" />
+        <img class="next twitter-problem__3 animation" width="600vw" src="pictures/problem_3.png" />
+        <img class="next twitter-problem__4 animation" width="800vw" src="pictures/problem_4.png" />
+        <div class="next twitter-problem__sadness animation">:<span style="color: #4B86C2">*</span>(</div>
+
+        <a class="twitter-problem__link next" target="_blank"
+            href="https://twitter.com/orimarron/status/1192729465345970176">Link</a>
+
+        <style>
+            img.animation {
+                opacity: 0;
+                transform: translate3d(0, 0, 0) scale(4.0);
+                transition: opacity 250ms, transform 250ms;
+                will-change: transform;
+            }
+
+            img.animation.active {
+                opacity: 1;
+                transform: translate3d(0, 0, 0) scale(1.0);
+            }
+
+            .twitter-problem__1 {
+                position: absolute;
+                z-index: 1;
+                left: 200px;
+                top: 150px;
+            }
+
+            .twitter-problem__2 {
+                position: absolute;
+                z-index: 2;
+                left: 240px;
+                top: 190px;
+            }
+
+            .twitter-problem__3 {
+                position: absolute;
+                z-index: 3;
+                left: 180;
+                top: 210px;
+            }
+
+            .twitter-problem__4 {
+                position: absolute;
+                z-index: 4;
+                left: 140px;
+                top: 280px;
+            }
+
+            .twitter-problem__link {
+                display: inline-block;
+                position: absolute;
+                bottom: 80px;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+
+            .twitter-problem__sadness {
+                position: absolute;
+                z-index: 3;
+                bottom: 90px;
+                left: 300px;
+                font-size: 70px;
+            }
+
+            .twitter-problem__sadness.animation {
+                transform: translate3d(0, -200%, 0);
+                transition: transform 500ms;
+            }
+
+            .twitter-problem__sadness.animation.active {
+                transform: translate3d(0, 0, 0) rotate(30deg);
+            }
+        </style>
+    </section>
+
+    <section class="slide">
+        <h2>Solution — Libraries</h2>
+
+        <ul>
+            <li><a target="_blank" href="https://relay.dev/">react-relay</a></li>
+            <li><a target="_blank" href="https://github.com/tannerlinsley/react-query">react-query</a></li>
+            <li><a target="_blank" href="https://www.npmjs.com/package/react-cache">react-cache</a></li>
+            <li><a target="_blank" href="https://swr.now.sh/">react swr</a></li>
+        </ul>
+    </section>
+
+    <section class="slide">
+        <h2>react-query</h2>
+
+        <pre>
+            <code>const AssetViewer = ({ assetId }) => {</code>
+            <code>  const { data } = <mark>useQuery</mark>(</code>
+            <code>    ['uniqueCacheKey', { assetId }],</code>
+            <code>    api.fetchAsset,</code>
+            <code>    { <mark>suspense: true</mark>, staleTime: 10000 }</code>
+            <code>  );</code>
+            <code>}</code>
+        </pre>
+    </section>
+
+    <section class="slide">
+        <h2>react-query</h2>
+
+        <ul>
+            <li>Easy-to-use hook for a data fetching</li>
+            <li>Cache invalidation out of the box</li>
+            <li>Indirect suspense dependency</li>
+        </ul>
+    </section>
+
+    <section class="slide">
+        <h2 class="shout">Future</h2>
+    </section>
+
+    <section class="slide">
+        <h2>Suspense List</h2>
+
+        <pre>
+            <code>&lt;React.SuspenseList <mark>revealOrder="forwards"</mark>&gt;</code>
+            <code>  &lt;Suspense fallback={"⌛ 1"}&gt;<mark>&lt;Subscriptions /&gt;</mark>&lt;/Suspense&gt;</code>
+            <code>  &lt;Suspense fallback={"⌛ 2"}&gt;<mark>&lt;Mailboxes /&gt;</mark>&lt;/Suspense&gt;</code>
+            <code>  &lt;Suspense fallback={"⌛ 3"}&gt;<mark>&lt;Apps /&gt;</mark>&lt;/Suspense&gt;</code>
+            <code>  &lt;Suspense fallback={"⌛ 4"}&gt;<mark>&lt;Domains /&gt;</mark>&lt;/Suspense&gt;</code>
+            <code>&lt;/React.SuspenseList&gt;</code>
+        </pre>
+    </section>
+
+    <section class="slide">
+        <h2>Suspense List</h2>
+
+        <ul>
+            <li>Control of the reveal order</li>
+            <li>...</li>
+        </ul>
+    </section>
+
+    <section class="slide">
+        <h2>useTransition</h2>
+
+        <pre>
+            <code>const AssetViewer = () => {</code>
+            <code>  const [resource, <mark>setResource</mark>] = useState(initialResource);</code>
+            <code>  const [<mark>startTransition</mark>, isPending] = <mark>useTransition</mark>({</code>
+            <code>    timeoutMs: 3000</code>
+            <code>  });</code>
+            <code>  return (&lt;Button onClick={(id) => </code>
+            <code>    <mark>startTransition</mark>(() => <mark>setResource</mark>(fetchAsset(id));</code>
+        </pre>
+    </section>
+
+    <section class="slide">
+        <h2>useTransition</h2>
+
+        <p>
+            Allows the component to preserve the previous version while the new one is still loading.
+        </p>
+        ???
+    </section>
+
+    <section class="slide">
+        <h2 class="shout">The End</h2>
+    </section>
+
+    <div class="progress"></div>
+
+    <script src="shower/shower.min.js"></script>
+
+</body>
+
+</html>
