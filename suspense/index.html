@@ -123,10 +123,10 @@
 
         <ul>
             <li>It uses the same Suspense mechanism
-                <p>Suspense can be used for both Lazy components and data fetching.</p>
+                <p>Suspense can be used for both Lazy components and Data fetching.</p>
             </li>
             <li>Easy-to-use and easy-to-maintain
-                <p>Works on a core level of React. No need for custom state management.</p>
+                <p>Works on a core level of React. No need for a custom state management.</p>
             </li>
         </ul>
     </section>
@@ -247,7 +247,15 @@
     </section>
 
     <section class="slide">
-        <h2 class="shout">Future</h2>
+        <h2 class="shout">Concurrent Future</h2>
+        <h6 class="future__note">* experimental</h6>
+        <style>
+            .future__note {
+                position: absolute;
+                left: 30px;
+                bottom: 0;
+            }
+        </style>
     </section>
 
     <section class="slide">
@@ -255,21 +263,12 @@
 
         <pre>
             <code>&lt;React.SuspenseList <mark>revealOrder="forwards"</mark>&gt;</code>
-            <code>  &lt;Suspense fallback={"⌛ 1"}&gt;<mark>&lt;Subscriptions /&gt;</mark>&lt;/Suspense&gt;</code>
-            <code>  &lt;Suspense fallback={"⌛ 2"}&gt;<mark>&lt;Mailboxes /&gt;</mark>&lt;/Suspense&gt;</code>
-            <code>  &lt;Suspense fallback={"⌛ 3"}&gt;<mark>&lt;Apps /&gt;</mark>&lt;/Suspense&gt;</code>
-            <code>  &lt;Suspense fallback={"⌛ 4"}&gt;<mark>&lt;Domains /&gt;</mark>&lt;/Suspense&gt;</code>
+            <code>  &lt;Suspense fallback="⌛"&gt;<mark>&lt;PlansLazy /&gt;</mark>&lt;/Suspense&gt;</code>
+            <code>  &lt;Suspense fallback="⌛"&gt;<mark>&lt;MailboxesLazy /&gt;</mark>&lt;/Suspense&gt;</code>
+            <code>  &lt;Suspense fallback="⌛"&gt;<mark>&lt;AppsLazy /&gt;</mark>&lt;/Suspense&gt;</code>
+            <code>  &lt;Suspense fallback="⌛"&gt;<mark>&lt;DomainsLazy /&gt;</mark>&lt;/Suspense&gt;</code>
             <code>&lt;/React.SuspenseList&gt;</code>
         </pre>
-    </section>
-
-    <section class="slide">
-        <h2>Suspense List</h2>
-
-        <ul>
-            <li>Control of the reveal order</li>
-            <li>...</li>
-        </ul>
     </section>
 
     <section class="slide">
@@ -278,21 +277,22 @@
         <pre>
             <code>const AssetViewer = () => {</code>
             <code>  const [resource, <mark>setResource</mark>] = useState(initialResource);</code>
-            <code>  const [<mark>startTransition</mark>, isPending] = <mark>useTransition</mark>({</code>
-            <code>    timeoutMs: 3000</code>
-            <code>  });</code>
-            <code>  return (&lt;Button onClick={(id) => </code>
-            <code>    <mark>startTransition</mark>(() => <mark>setResource</mark>(fetchAsset(id));</code>
+            <code>  const [<mark>startTransition</mark>, isPending] = <mark>useTransition</mark>();</code>
+            <code>  return (</code>
+            <code>    &lt;Button <mark>disabled={isPending}</mark> onClick={(id) => {</code>
+            <code>      <mark>startTransition</mark>(() => <mark>setResource</mark>(fetchAsset(id)));</code>
+            <code>    }&gt;Load Asset&lt;/Button&gt;</code>
         </pre>
     </section>
 
     <section class="slide">
-        <h2>useTransition</h2>
+        <h2>Future React APIs</h2>
 
-        <p>
-            Allows the component to preserve the previous version while the new one is still loading.
-        </p>
-        ???
+        <ul>
+            <li>Allows to orchestrate of React Suspense components reveal order</li>
+            <li>Allows the component to preserve the previous version while the new one is still loading</li>
+            <li>New approaches for improving UX</li>
+        </ul>
     </section>
 
     <section class="slide">
