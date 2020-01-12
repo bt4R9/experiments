@@ -10,10 +10,6 @@
         .shower {
             --slide-ratio: calc(16 / 9);
         }
-
-        .no-number::after {
-            visibility: hidden;
-        }
     </style>
 </head>
 
@@ -50,20 +46,11 @@
 
     <section class="slide black clear">
         <iframe class="shout"
-            src="https://codesandbox.io/embed/determined-cookies-cwts2?fontsize=14&hidenavigation=1&theme=dark&view=preview"
+            src="https://codesandbox.io/embed/determined-cookies-cwts2?fontsize=14&hidenavigation=1&module=%2Fsrc%2FApp.js&theme=dark&view=preview"
             style="width:100%; height:510px; border:0; border-radius: 4px; overflow:hidden;"
             title="determined-cookies-cwts2"
             allow="geolocation; microphone; camera; midi; vr; accelerometer; gyroscope; payment; ambient-light-sensor; encrypted-media; usb"
             sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"></iframe>
-    </section>
-
-    <section class="slide">
-        <h2>Benefits</h2>
-        <ol>
-            <li>Simple loading state management</li>
-            <li>Code splitting</li>
-            <li>Performance</li>
-        </ol>
     </section>
 
     <section class="slide">
@@ -80,6 +67,15 @@
         </pre>
     </section>
 
+    <section class="slide black clear">
+        <iframe class="shout"
+            src="https://codesandbox.io/embed/charming-galois-xpilz?fontsize=14&hidenavigation=1&module=%2Fsrc%2FApp.js&theme=dark&view=preview"
+            style="width:100%; height:510px; border:0; border-radius: 4px; overflow:hidden;"
+            title="charming-galois-xpilz"
+            allow="geolocation; microphone; camera; midi; vr; accelerometer; gyroscope; payment; ambient-light-sensor; encrypted-media; usb"
+            sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"></iframe>
+    </section>
+
     <section class="slide">
         <h2>How does it work?</h2>
 
@@ -94,6 +90,21 @@
 
         <a target="_blank"
             href="https://github.com/wix-private/premium-management/blob/master/packages/assign-subscription/src/components/AssignSubscription/AssignSubscriptionModal/AssignSubscriptionModal.tsx">Link</a>
+    </section>
+
+    <section class="slide">
+        <h2>Benefits</h2>
+        <ol>
+            <li>Simple loading state management
+                <p>React automatically manages ready, loading and error states.</p>
+            </li>
+            <li>Code splitting
+                <p>Dynamically imported components are splitted into chunks.</p>
+            </li>
+            <li>Performance
+                <p>Chunks are loaded on demand.</p>
+            </li>
+        </ol>
     </section>
 
     <section class="slide">
@@ -131,11 +142,20 @@
         </pre>
     </section>
 
+    <section class="slide black clear">
+        <iframe class="shout"
+            src="https://codesandbox.io/embed/recursing-vaughan-gyq5k?fontsize=14&hidenavigation=1&theme=dark&view=preview"
+            style="width:100%; height:510px; border:0; border-radius: 4px; overflow:hidden;"
+            title="recursing-vaughan-gyq5k"
+            allow="geolocation; microphone; camera; midi; vr; accelerometer; gyroscope; payment; ambient-light-sensor; encrypted-media; usb"
+            sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"></iframe>
+    </section>
+
     <section class="slide">
         <h2>Benefits</h2>
 
         <ul>
-            <li>It uses the same Suspense mechanism
+            <li>The same Suspense mechanism
                 <p>Suspense can be used for both Lazy components and Data fetching.</p>
             </li>
             <li>Easy-to-use and easy-to-maintain
@@ -144,81 +164,53 @@
         </ul>
     </section>
 
-    <section class="slide" style="line-height: 1">
+    <section class="slide">
         <h2>A little problem</h2>
 
-        <img class="next twitter-problem__1 animation" width="420vw" src="pictures/problem_1.png" />
-        <img class="next twitter-problem__2 animation" width="500vw" src="pictures/problem_2.png" />
-        <img class="next twitter-problem__3 animation" width="600vw" src="pictures/problem_3.png" />
-        <img class="next twitter-problem__4 animation" width="800vw" src="pictures/problem_4.png" />
-        <div class="next twitter-problem__sadness animation">:<span style="color: #4B86C2">*</span>(</div>
+        <div style="line-height: 1;">
+            <img class="twitter-problem__1 animation" width="420vw" src="pictures/problem_1.png" />
+            <img class="twitter-problem__2 animation" width="500vw" src="pictures/problem_2.png" />
+            <img class="twitter-problem__3 animation" width="600vw" src="pictures/problem_3.png" />
+            <img class="twitter-problem__4 animation" width="800vw" src="pictures/problem_4.png" />
+            <div class="twitter-problem__sadness next animation">:<span style="color: #4B86C2">*</span>(</div>
 
-        <a class="twitter-problem__link next" target="_blank"
-            href="https://twitter.com/orimarron/status/1192729465345970176">Link</a>
-
+            <a class="twitter-problem__link" target="_blank"
+                href="https://twitter.com/orimarron/status/1192729465345970176">Link</a>
+        </div>
         <style>
-            img.animation {
-                opacity: 0;
-                transform: translate3d(0, 0, 0) scale(4.0);
-                transition: opacity 250ms, transform 250ms;
-                will-change: transform;
-            }
-
-            img.animation.active {
-                opacity: 1;
+            img {
+                position: relative;
+                left: 0;
+                top: 0;
+                width: 450px;
                 transform: translate3d(0, 0, 0) scale(1.0);
-            }
-
-            .twitter-problem__1 {
-                position: absolute;
-                z-index: 1;
-                left: 200px;
-                top: 150px;
-            }
-
-            .twitter-problem__2 {
-                position: absolute;
-                z-index: 2;
-                left: 240px;
-                top: 190px;
-            }
-
-            .twitter-problem__3 {
-                position: absolute;
-                z-index: 3;
-                left: 180;
-                top: 210px;
-            }
-
-            .twitter-problem__4 {
-                position: absolute;
-                z-index: 4;
-                left: 140px;
-                top: 280px;
-            }
-
-            .twitter-problem__link {
-                display: inline-block;
-                position: absolute;
-                bottom: 80px;
-                left: 50%;
-                transform: translateX(-50%);
             }
 
             .twitter-problem__sadness {
                 position: absolute;
                 z-index: 3;
-                bottom: 90px;
-                left: 300px;
-                font-size: 70px;
+                bottom: 20px;
+                left: 520px;
+                font-size: 30px;
+            }
+
+            .twitter-problem__4 {
+                z-index: 2;
+            }
+
+            .twitter-problem__link {
+                display: block;
+                width: 46px;
             }
 
             .twitter-problem__sadness.animation {
+                z-index: 1;
                 transform: translate3d(0, -200%, 0);
                 transition: transform 500ms;
             }
 
-            .twitter-problem__sadness.animation.active {
+            .twitter-problem__sadness.animation.active,
+            .visited .twitter-problem__sadness {
                 transform: translate3d(0, 0, 0) rotate(30deg);
             }
         </style>
@@ -276,46 +268,51 @@
 
         <pre>
             <code>&lt;React.SuspenseList <mark>revealOrder="forwards"</mark>&gt;</code>
-            <code>  &lt;Suspense fallback="⌛"&gt;<mark>&lt;PlansLazy /&gt;</mark>&lt;/Suspense&gt;</code>
-            <code>  &lt;Suspense fallback="⌛"&gt;<mark>&lt;MailboxesLazy /&gt;</mark>&lt;/Suspense&gt;</code>
-            <code>  &lt;Suspense fallback="⌛"&gt;<mark>&lt;AppsLazy /&gt;</mark>&lt;/Suspense&gt;</code>
-            <code>  &lt;Suspense fallback="⌛"&gt;<mark>&lt;DomainsLazy /&gt;</mark>&lt;/Suspense&gt;</code>
+            <code>  &lt;Suspense fallback="⌛"&gt;<mark>&lt;Header /&gt;</mark>&lt;/Suspense&gt;</code>
+            <code>  &lt;Suspense fallback="⌛"&gt;<mark>&lt;Navigation /&gt;</mark>&lt;/Suspense&gt;</code>
+            <code>  &lt;Suspense fallback="⌛"&gt;<mark>&lt;Menu /&gt;</mark>&lt;/Suspense&gt;</code>
+            <code>  &lt;Suspense fallback="⌛"&gt;<mark>&lt;Footer /&gt;</mark>&lt;/Suspense&gt;</code>
             <code>&lt;/React.SuspenseList&gt;</code>
         </pre>
     </section>
 
-    <section class="slide">
-        <h2>useTransition</h2>
+    <section class="slide black clear">
+        <iframe class="shout"
+            src="https://codesandbox.io/embed/black-rain-twn1l?fontsize=14&hidenavigation=1&theme=dark&view=preview"
+            style="width:100%; height:510px; border:0; border-radius: 4px; overflow:hidden;" title="black-rain-twn1l"
+            allow="geolocation; microphone; camera; midi; vr; accelerometer; gyroscope; payment; ambient-light-sensor; encrypted-media; usb"
+            sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"></iframe>
+    </section>
 
-        <pre>
-            <code>const AssetViewer = () => {</code>
-            <code>  const [resource, <mark>setResource</mark>] = useState(initialResource);</code>
-            <code>  const [<mark>startTransition</mark>, isPending] = <mark>useTransition</mark>();</code>
-            <code>  return (</code>
-            <code>    &lt;Button <mark>disabled={isPending}</mark> onClick={(id) => {</code>
-            <code>      <mark>startTransition</mark>(() => <mark>setResource</mark>(fetchAsset(id)));</code>
-            <code>    }&gt;Load Asset&lt;/Button&gt;</code>
-        </pre>
+    <section class="slide black clear">
+        <iframe class="shout"
+            src="https://codesandbox.io/embed/epic-rain-9mzut?fontsize=14&hidenavigation=1&theme=dark&view=preview"
+            style="width:100%; height:510px; border:0; border-radius: 4px; overflow:hidden;" title="epic-rain-9mzut"
+            allow="geolocation; microphone; camera; midi; vr; accelerometer; gyroscope; payment; ambient-light-sensor; encrypted-media; usb"
+            sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"></iframe>
     </section>
 
     <section class="slide">
         <h2>Future React APIs</h2>
 
         <ul>
-            <li>Allows to orchestrate of React Suspense components reveal order</li>
-            <li>Allows the component to preserve the previous version while the new one is still loading</li>
-            <li>New approaches for improving UX</li>
+            <li>SuspenseList
+                <p>A brand new component for orchestrating multiple Suspense components.</p>
+            </li>
+            <li>useTransition
+                <p>A new hook which allows the component to preserve the previous version while the new one is still
+                    loading.</p>
+            </li>
         </ul>
     </section>
 
     <section class="slide">
-        <h2 class="shout">The End</h2>
+        <h6 style="margin: 0; font-size: 24px;" class="shout">Thanks! Any questions?</h6>
     </section>
 
     <div class="progress"></div>
 
     <script src="shower/shower.min.js"></script>
-
 </body>
 
 </html>
