@@ -120,7 +120,7 @@
         <pre>
             <code>read() {</code>
             <code>  if (status === 'pending') <mark>throw promise;</mark></code>
-            <code>  if (status === 'failure') throw result;</code>
+            <code>  if (status === 'failure') throw error;</code>
             <code>  if (status === 'success') return result;</code>
             <code>}</code>
         </pre>
